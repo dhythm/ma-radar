@@ -49,6 +49,7 @@ export function parseListHtml(html, baseUrl = 'https://rakkoma.com') {
       ...stats, kind, category: categoryFor(title, kind),
       tags: card.find('.project_list_tag_item').toArray().map((tag) => normalize($(tag).text())).filter(Boolean),
       summary: normalize(card.find('.project_list_summary_text').text()),
+      saleReason: null, firstSeenAt: '', lastSeenAt: '', priceHistory: [],
     });
   }
   return items;

@@ -4,6 +4,7 @@ import type { Project } from './types';
 
 const base: Project = {
   id: 1, title: '', summary: '', url: '', kind: 'other', category: 'その他', tags: [],
+  saleReason: null, firstSeenAt: '', lastSeenAt: '', priceHistory: [],
   publishedAt: null, price: null, monthlyProfit: null, monthlySales: null, pv: null, followers: null,
 };
 const score = (fields: Partial<Project>) => scoreProject({ ...base, ...fields });
@@ -15,6 +16,14 @@ describe('scoreProject', () => {
 
   it('数値不明なら加点しない', () => {
     expect(score({})).toEqual({ score: 0, excluded: false, reasons: [] });
+  });
+
+  it('一覧の「別事業に注力」は対象外だが、売却理由なら一度だけ20点加点する', () => {
+    const saleReason = '別事業に注力するため';
+    expect(score({ summary: saleReason }).score).toBe(0);
+    const expected = { score: 20, excluded: false, reasons: [{ label: '売却理由が「多忙・他事業集中」に該当', points: 20 }] };
+    expect(score({ saleReason })).toEqual(expected);
+    expect(score({ title: '多忙', saleReason })).toEqual(expected);
   });
 
   it.each<[Partial<Project>, number]>([

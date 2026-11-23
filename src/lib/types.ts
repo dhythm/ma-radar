@@ -12,6 +12,10 @@ export interface Project {
   kind: 'site' | 'account' | 'other';
   tags: string[];
   summary: string;
+  saleReason: string | null;
+  firstSeenAt: string;
+  lastSeenAt: string;
+  priceHistory: { date: string; price: number }[];
 }
 
 export interface ProjectsData {

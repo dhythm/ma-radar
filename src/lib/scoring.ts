@@ -5,7 +5,7 @@ export interface ScoreResult { score: number; excluded: boolean; reasons: ScoreR
 
 export function scoreProject(project: Project): ScoreResult {
   const { title, summary, tags, category, price, monthlyProfit, followers, pv } = project;
-  const text = [title, summary, ...tags].join(' ');
+  const text = [title, summary, ...tags, project.saleReason].join(' ');
   if (/youtube|ユーチューブ/i.test(`${text} ${category}`)) {
     return { score: 0, excluded: true, reasons: [{ label: 'YouTube案件のため除外', points: 0 }] };
   }
@@ -13,7 +13,8 @@ export function scoreProject(project: Project): ScoreResult {
   const reasons: ScoreReason[] = [];
   const add = (label: string, points: number) => reasons.push({ label, points });
   const has = (keywords: string[]) => keywords.some((keyword) => text.includes(keyword));
-  if (has(['忙しく','多忙','時間が取れ','時間がなく','時間がない','本業が忙','他事業','事業に集中','手が回ら']))
+  if (has(['忙しく','多忙','時間が取れ','時間がなく','時間がない','本業が忙','他事業','事業に集中','手が回ら'])
+    || ['忙','注力','集中','時間が','他事業','別事業','本業'].some(keyword => project.saleReason?.includes(keyword)))
     add('売却理由が「多忙・他事業集中」に該当', 20);
   if (has(['マニュアル','未経験','初心者','簡単','シンプル','仕組み化','誰でも','専門知識不要','スキル不要']))
     add('運用がシンプル・スキル不要の示唆あり', 15);

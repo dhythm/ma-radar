@@ -10,6 +10,7 @@ function item(id: number, fields: Partial<Project> = {}, score = 0, excluded = f
   return {
     project: {
       id, title: '', summary: '', category: 'ブログ', tags: [], url: '', kind: 'site',
+      saleReason: null, firstSeenAt: '', lastSeenAt: '', priceHistory: [],
       publishedAt: null, price: null, monthlySales: null, monthlyProfit: null, pv: null, followers: null, ...fields,
     },
     result: { score, excluded, reasons: [] },

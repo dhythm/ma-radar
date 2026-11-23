@@ -7,6 +7,9 @@ const fixture = readFileSync(new URL('./__fixtures__/list.html', import.meta.url
 it('実カード2件の掲載値を抽出し、平均・最高・要約内の数値は使わない', () => {
   const items = parseListHtml(fixture);
   expect(items).toHaveLength(2);
+  for (const item of items) {
+    expect(item).toMatchObject({ saleReason: null, firstSeenAt: '', lastSeenAt: '', priceHistory: [] });
+  }
   expect(items[0]).toMatchObject({
     id: 23157, url: 'https://rakkoma.com/project/detail/23157', publishedAt: '2026-09-29',
     title: '【完全外注可】登録者10万人超｜いらすとやを活用したエンタメ系YouTubeショートチャンネル譲渡【ショート動画メイン】',
