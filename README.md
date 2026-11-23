@@ -33,3 +33,16 @@ M&A 案件（事業承継・サイト売買など）を集めて、条件でス�
 2. スコアリング（上記観点のキーワード・数値条件による機械判定＋理由の表示）
 3. 一覧 UI：スコア順・価格帯・キーワードで絞り込み、案件詳細へのリンク
 4. GitHub Actions による日次収集
+
+## 使い方
+
+Node.js 22 の最新版で `npm install` してから、以下を実行します。GitHub Actions の `npm ci` と npm キャッシュを使うには、このとき生成される `package-lock.json` を事前にリポジトリに含めてください。
+
+- 収集: `npm run collect`（既定は一覧1ページ、保存先は `data/projects.json`）
+- 通信なしで収集を試す: `npm run collect -- --file scripts/__fixtures__/list.html --out /tmp/ma-radar-projects.json`
+- 開発: `npm run dev`
+- テスト: `npm test`
+- ビルド: `npm run build`
+
+robots.txt に配慮し、専用の User-Agent を明示します。複数ページ収集時は Crawl-delay に従って10秒待ち、定期収集は1日1回（日本時間9時）です。
+価格・利益は売主の掲載値であり、検証済みの数値ではありません。
