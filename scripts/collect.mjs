@@ -29,7 +29,7 @@ async function collect() {
   } else {
     for (let page = 1; page <= pages; page++) {
       if (page > 1) await sleep(10_000);
-      // ページネーション形式は未確認のため、2ページ目以降は ?page=N を仮定する。
+      // ページネーションは一覧ページ内のリンクで ?page=N 形式であることを確認済み。
       const url = page === 1 ? source : `${source}?page=${page}`;
       const response = await fetch(url, { headers: { 'User-Agent': userAgent } });
       if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}: ${url}`);
