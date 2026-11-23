@@ -1,0 +1,16 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #233143;
+  background: #f6f8fa;
+  color-scheme: light;
+  line-height: 1.6;
+  --blue: #205ca1;
+  --muted: #536476;
+  --border: #d9e1e8;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+h1, h2, h3, h4, p, dl, dd, ul { margin: 0; }
+a { color: var(--blue); text-underline-offset: .18em; }
+input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
