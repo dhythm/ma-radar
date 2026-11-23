@@ -4,6 +4,7 @@ import type { Project } from './types';
 
 const defaults: FilterOptions = {
   keyword: '', priceBand: 'all', category: 'all', minScore: 0, sort: 'score', showExcluded: false,
+  onlyNew: false, onlyDropped: false, referenceDate: '2026-11-23',
 };
 
 function item(id: number, fields: Partial<Project> = {}, score = 0, excluded = false): ScoredProject {
@@ -41,6 +42,14 @@ describe('filterAndSort', () => {
   });
 
   const prices = [null, 0, 300_000, 300_001, 500_000, 500_001, 1_000_000, 1_000_001, 3_000_000, 3_000_001];
+  it('新着と直近の値下げを個別にも組み合わせても絞り込める', () => {
+    const priceHistory = [{ date: '2026-11-21', price: 200 }, { date: '2026-11-23', price: 100 }];
+    const projects = [item(1, { firstSeenAt: '2026-11-20', priceHistory }),
+      item(2, { firstSeenAt: '2026-11-21', priceHistory }), item(3, { firstSeenAt: '2026-11-23' })];
+    expect(ids(projects, { onlyNew: true })).toEqual([2, 3]);
+    expect(ids(projects, { onlyDropped: true })).toEqual([1, 2]);
+    expect(ids(projects, { onlyNew: true, onlyDropped: true })).toEqual([2]);
+  });
   it.each<[FilterOptions['priceBand'], number[]]>([
     ['all', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]], ['le30', [1, 2]], ['30to50', [3, 4]],
     ['50to100', [5, 6]], ['100to300', [7, 8]], ['gt300', [9]],

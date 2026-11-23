@@ -1,5 +1,6 @@
 import type { Project } from './types';
 import type { ScoreResult } from './scoring';
+import { isNewProject, latestPriceDrop } from './history';
 
 export interface ScoredProject { project: Project; result: ScoreResult }
 export type SortKey = 'score' | 'newest' | 'priceAsc' | 'priceDesc' | 'profitDesc';
@@ -10,6 +11,9 @@ export interface FilterOptions {
   minScore: number;
   sort: SortKey;
   showExcluded: boolean;
+  onlyNew: boolean;
+  onlyDropped: boolean;
+  referenceDate: string;
 }
 
 function matchesPrice(price: number | null, band: FilterOptions['priceBand']): boolean {
@@ -36,6 +40,8 @@ export function filterAndSort(items: ScoredProject[], options: FilterOptions): S
   return items.filter(({ project, result }) =>
     (options.showExcluded || !result.excluded) && result.score >= options.minScore &&
     (options.category === 'all' || options.category === project.category) &&
+    (!options.onlyNew || isNewProject(project, options.referenceDate)) &&
+    (!options.onlyDropped || latestPriceDrop(project) !== null) &&
     matchesPrice(project.price, options.priceBand) &&
     (!keyword || [project.title, project.summary, project.category, ...project.tags].join(' ').toLowerCase().includes(keyword))
   ).sort((left, right) => {
